@@ -1,0 +1,3 @@
+[submodule "pgtable-tool"]
+	path = pgtable-tool
+	url = https://github.com/ashwio/arm64-pgtable-tool.git
