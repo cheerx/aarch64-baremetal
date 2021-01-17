@@ -20,7 +20,7 @@ QEMU_OPTS += -monitor none -serial none -kernel kernel.elf
 
 objs = $(BOOT_OBJS) $(filter-out $(BOOT_OBJS),$(AS_OBJS)) $(C_OBJS)
 
-kernel.elf: $(objs) $(LINK_SCRIPT)
+kernel.elf: kernel.ld $(objs)
 	$(CC) $(LDFLAGS) -o kernel.elf $(objs)
 
 $(AS_OBJS): %.o: %.S
@@ -35,3 +35,7 @@ run: kernel.elf
 .PHONY: clean
 clean:
 	rm -f $(SRC_ROOT)/*.o $(MINILIB_SRC)/*.o kernel.elf
+
+mmu.S: qemu-virt-memmap.txt
+	python3 pgtable-tool/generate.py -i qemu-virt-memmap.txt \
+		-o mmu.S -ttb 0x50000000 -el 1 -tg 4K -tsz 48
